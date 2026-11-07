@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+/* Self-hosted variable font (Latin subset, 400–600) with a metric-matched fallback to avoid layout shift. */
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("./fonts/SourceSans3-latin-var.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Source Sans 3 Fallback";
+  src: local("Arial");
+  ascent-override: 109.21%;
+  descent-override: 42.66%;
+  line-gap-override: 0%;
+  size-adjust: 93.76%;
+}
+
+@theme inline {
+  --color-paper: #ffffff;
+  --color-ink: #353535;
+  --color-ink-soft: #6a6a6a;
+  --color-line: #eaeaea;
+  --color-line-strong: #d4d6d5;
+  --color-control: #8a8d8c;
+  --color-wash: #f6f6f5;
+  --font-sans: "Source Sans 3", "Source Sans 3 Fallback", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--color-paper);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: #353535;
+    color: #fff;
+  }
+  [id] {
+    scroll-margin-top: 1.5rem;
+  }
+}
+
+/* One orchestrated entrance for the hero, one fade for page changes. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes slide {
+  from {
+    transform: translateY(10px);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-5px) rotate(calc(var(--r, 0deg) + 3deg));
+  }
+}
+
+@layer utilities {
+  .animate-rise {
+    animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  .animate-page {
+    animation: page-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .animate-slide {
+    animation: slide 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--delay, 0ms);
+  }
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+    will-change: transform;
+  }
+  .animate-drift {
+    animation: drift 5s ease-in-out infinite;
+    animation-delay: var(--delay, 0ms);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}
