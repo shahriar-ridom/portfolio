@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { Mail, CircleUserRound } from "lucide-react";
 import { Github } from "./icons";
 import { NavLinks } from "./nav-links";
-import { profile, socials } from "@/data/profile";
+import { navLinks, profile, socials } from "@/data/profile";
 
 const iconClass =
   "grid size-10 place-items-center rounded-full text-ink transition-colors hover:bg-wash";
@@ -21,7 +22,20 @@ export function SiteHeader() {
         aria-label="Primary"
         className="col-span-2 row-start-2 border-t border-line pt-3 md:col-span-1 md:col-start-2 md:row-start-1 md:border-0 md:pt-0"
       >
-        <NavLinks />
+        {/* usePathname is dynamic on routes with params (admin edit), so give it a static fallback. */}
+        <Suspense
+          fallback={
+            <ul className="flex justify-center gap-8 text-[0.95rem]">
+              {navLinks.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="inline-block py-1 text-ink-soft">{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          }
+        >
+          <NavLinks />
+        </Suspense>
       </nav>
 
       <div className="col-start-2 row-start-1 flex items-center justify-self-end gap-1 md:col-start-3">

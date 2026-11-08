@@ -3,14 +3,15 @@ import { Mail } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons";
 import { ContactForm } from "@/components/contact-form";
 import { JsonLd } from "@/components/json-ld";
+import { pageMetadata } from "@/lib/seo";
 import { contactSchema } from "@/lib/schema";
 import { profile, socials } from "@/data/profile";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description: "Get in touch with Shahriar about a project, a collaboration, or just to say hello.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 const row =
   "group flex items-center gap-3 py-3 text-ink transition-colors hover:text-ink-soft";

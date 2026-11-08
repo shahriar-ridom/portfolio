@@ -1,6 +1,7 @@
 "use server";
 
 import { profile } from "@/data/profile";
+import { clientIp, hit } from "@/lib/rate-limit";
 import { validateContact, type ContactState, type ContactValues } from "@/lib/contact";
 
 const read = (data: FormData, key: string) => {
@@ -18,6 +19,11 @@ export async function sendMessage(_prev: ContactState, data: FormData): Promise<
     subject: read(data, "subject"),
     message: read(data, "message"),
   };
+
+  // 5 messages per hour per visitor keeps the Resend quota safe from scripted spam.
+  if (hit(`contact:${await clientIp()}`, 5, 60 * 60 * 1000) > 0) {
+    return { status: "error", message: "You've sent a few messages already. Please try again later.", values };
+  }
 
   const errors = validateContact(values);
   if (Object.keys(errors).length > 0) {
@@ -44,7 +50,7 @@ export async function sendMessage(_prev: ContactState, data: FormData): Promise<
         from,
         to,
         reply_to: values.email.trim(),
-        subject: `[Portfolio] ${values.subject.trim()}`,
+        subject: `[Portfolio] ${values.subject.replace(/[\r\n]+/g, " ").trim()}`,
         text: `From: ${values.name.trim()} <${values.email.trim()}>\n\n${values.message.trim()}`,
       }),
     });

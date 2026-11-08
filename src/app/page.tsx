@@ -2,19 +2,23 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/hero";
 import { JsonLd } from "@/components/json-ld";
 import { ProjectsSection } from "@/components/projects-section";
-import { homeSchema } from "@/lib/schema";
+import { getProjects } from "@/db/queries";
+import { pageMetadata } from "@/lib/seo";
+import { projectsSchema } from "@/lib/schema";
 import { profile } from "@/data/profile";
 
-export const metadata: Metadata = {
-  title: { absolute: `${profile.name} — Developer building native Linux apps, Rust tools and web projects` },
+export const metadata: Metadata = pageMetadata({
+  title: `${profile.name} — Developer building native Linux apps and Rust tools`,
   description: profile.siteDescription,
-  alternates: { canonical: "/" },
-};
+  path: "/",
+  absoluteTitle: true,
+});
 
-export default function Home() {
+export default async function Home() {
+  const projects = await getProjects();
   return (
     <>
-      <JsonLd data={homeSchema} />
+      <JsonLd data={projectsSchema(projects)} />
       <Hero />
       <ProjectsSection />
     </>

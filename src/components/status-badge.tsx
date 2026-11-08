@@ -1,4 +1,4 @@
-import type { ProjectStatus } from "@/data/projects";
+import type { ProjectStatus } from "@/lib/project-types";
 
 export function StatusBadge({ status }: { status: ProjectStatus }) {
   const live = status === "Active";

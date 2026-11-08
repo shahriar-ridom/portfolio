@@ -3,15 +3,16 @@ import { Mail } from "lucide-react";
 import { Github, Linkedin } from "@/components/icons";
 import Link from "next/link";
 import { JsonLd } from "@/components/json-ld";
+import { pageMetadata } from "@/lib/seo";
 import { aboutSchema } from "@/lib/schema";
 import { about, profile, socials } from "@/data/profile";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
   description:
     "About Shahriar: a developer building native Linux apps, Rust tools and web projects. How I work, what I'm into, and the tools I use.",
-  alternates: { canonical: "/about" },
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

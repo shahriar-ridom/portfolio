@@ -2,13 +2,13 @@ export const profile = {
   name: "Shahriar",
   fullName: "Shahriar Ridom",
   role: "Developer",
-  email: "shahriarridom.info@gmail.com",
+  email: "info@ridom.dev",
   intro: "Hello, I'm Shahriar.",
   headline: "I Build Things for the Digital World.",
   summary:
     "I'm a developer interested in software engineering, native Linux applications, systems programming, and web technologies.",
   siteDescription:
-    "Shahriar's portfolio: native Linux apps, Rust tools, and web projects.",
+    "Portfolio of Shahriar Ridom, a developer building native Linux apps with Rust and GTK4, systems tools, and web projects.",
 } as const;
 
 export const socials = {
@@ -19,7 +19,7 @@ export const socials = {
 
 export const navLinks = [
   { label: "Main Portfolio", href: "/" },
-  { label: "Projects", href: "/#projects" },
+  { label: "Projects", href: "/projects" },
   { label: "About", href: "/about" },
 ] as const;
 
@@ -58,4 +58,20 @@ export const about = {
   ],
 } as const;
 
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(/\/$/, "");
+function resolveSiteUrl(): string {
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  if (explicit) return explicit.replace(/\/$/, "");
+  const vercel = process.env.VERCEL_ENV;
+  if (vercel === "production") {
+    if (process.env.VERCEL_PROJECT_PRODUCTION_URL) return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+    // A production build must never ship canonicals, sitemap and JSON-LD pointing at localhost.
+    throw new Error("NEXT_PUBLIC_SITE_URL must be set for production builds. See .env.example.");
+  }
+  if (vercel === "preview" && process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+  return "http://localhost:3000";
+}
+
+export const siteUrl = resolveSiteUrl();
+
+/** False on preview deployments, which must never be indexed. */
+export const isIndexable = process.env.VERCEL_ENV !== "preview";
