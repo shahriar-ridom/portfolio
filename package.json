@@ -9,7 +9,7 @@
     "lint": "eslint",
     "db:push": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs push",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",
